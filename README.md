@@ -2,8 +2,8 @@ ansible-python-lambda
 =====================
 
 An example of deploying [AWS Lambda][lambda] functions with [Ansible][ansible],
-for our blog post titled rather obviously “Deploying Amazon Lambda Functions
-with Ansible.”
+for our blog post titled rather obviously [“Deploying Amazon Lambda Functions
+with Ansible.”][blogpost]
 
 Requirements
 ------------
@@ -31,3 +31,4 @@ Usage
 
 [lambda]: https://aws.amazon.com/lambda/
 [ansible]: https://www.ansible.com/
+[blogpost]: https://tech.yplanapp.com/2016/05/27/deploying-amazon-lambda-functions-with-ansible/
