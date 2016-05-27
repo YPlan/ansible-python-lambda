@@ -1,0 +1,19 @@
+- name: copy package to s3
+  s3:
+    mode: put
+    src: build/{{ zip_name }}
+    region: '{{ aws_region }}'
+    bucket: '{{ s3_bucket }}'
+    object: '{{ zip_name }}'  # versioning on for bucket
+
+- name: find the s3 version we just uploaded
+  command: >
+    aws s3api head-object
+      --region {{ aws_region }}
+      --bucket {{ s3_bucket }}
+      --key {{ zip_name }}
+  register: head_object_output
+
+- name: set s3_version_id
+  set_fact:
+    s3_version_id: '{{ (head_object_output.stdout|from_json)["VersionId"] }}'

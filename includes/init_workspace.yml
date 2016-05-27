@@ -1,0 +1,48 @@
+- name: remove workspace dir
+  file:
+    path: workspace/
+    state: absent
+    force: yes
+
+- name: create workspace dir
+  file:
+    path: workspace/
+    state: directory
+
+- name: copy in code
+  synchronize:
+    src: '{{ code_path }}'
+    dest: workspace/
+    delete: yes
+
+- name: setup.cfg for no prefix
+  copy:
+    dest: workspace/setup.cfg
+    content: |
+      [install]
+      prefix=
+
+- name: get absolute path of workspace
+  changed_when: false
+  command: pwd
+  args:
+    chdir: workspace
+  register: abs_workspace_path
+
+- name: check for requirements.txt
+  changed_when: false
+  stat:
+    path: '{{ abs_workspace_path.stdout }}/requirements.txt'
+  register: requirements_result
+
+- name: install dependencies
+  when: requirements_result.stat.exists
+  pip:
+    chdir: '{{ abs_workspace_path.stdout }}'
+    extra_args: '-t .'  # install here, no virtualenv
+    requirements: requirements.txt
+
+- name: erase .pyc files
+  command: find . -type f -name "*.py[co]" -delete
+  args:
+    chdir: '{{ abs_workspace_path.stdout }}'

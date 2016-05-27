@@ -1,0 +1,9 @@
+- name: remove any old zip
+  file:
+    path: build/{{ zip_name }}
+    state: absent
+
+- name: zip package
+  command: zip -r ../build/{{ zip_name }} .
+  args:
+    chdir: workspace/
